@@ -1,0 +1,17 @@
+# Copy this file to ~/.config/nix-config/private.toml and fill in your actual values.
+# ~/.config/nix-config/ is outside the repo, so it's never part of the flake source.
+# Build with: darwin-rebuild switch --flake .#HOST --impure
+username = "user"
+
+[email]
+personal = "personal@example.com"
+work = "work@example.com"
+
+[git.userName]
+personal = "personal-username"
+work = "work-username"
+
+[git.signingKey]
+# Just the key name (e.g. "id_ed25519"), no path or .pub suffix.
+personal = "id_ed25519"
+work = "id_ed25519_work"

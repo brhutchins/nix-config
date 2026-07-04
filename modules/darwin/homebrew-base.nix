@@ -1,0 +1,3 @@
+{ ... }: {
+  homebrew.onActivation.cleanup = "zap";
+}
