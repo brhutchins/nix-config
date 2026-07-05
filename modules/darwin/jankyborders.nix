@@ -13,6 +13,6 @@ in {
     enable = true;
     inactive_color = border-color.inactive;
     active_color = border-color.active;
-    width = 8.5;
+    width = 4.0;
   };
 }
