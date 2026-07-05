@@ -827,7 +827,7 @@ in
 
     home.file.".config/ghostty/config.ghostty".text = ''
       font-family = Hasklig
-      font-size = 10
+      font-size = 12
       font-thicken = true
       macos-option-as-alt = left
       macos-titlebar-style = hidden
