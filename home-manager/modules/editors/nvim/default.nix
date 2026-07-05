@@ -76,7 +76,7 @@ in
       };
 
       keymaps = [
-        # General (from keybindings.lua)
+        # General
         { mode = "n"; key = "<leader><space>"; action = ":set hlsearch!<CR>"; options.silent = true; }
         { mode = "n"; key = "<leader>w"; action = "<C-w>"; options.silent = true; }
         { mode = "n"; key = "<leader><tab>c"; action = ":tabclose<CR>"; options.silent = true; }
@@ -104,12 +104,6 @@ in
         # Git
         { mode = "n"; key = "<leader>gg"; action = "<cmd>Neogit<CR>"; options.silent = true; }
 
-        # CodeCompanion
-        { mode = "n"; key = "<leader>cc"; action = "<cmd>CodeCompanionChat Toggle<CR>"; options.silent = true; }
-        { mode = "v"; key = "<leader>cc"; action = "<cmd>CodeCompanionChat Toggle<CR>"; options.silent = true; }
-        { mode = "n"; key = "<leader>cp"; action = "<cmd>CodeCompanionActions<CR>"; options.silent = true; }
-        { mode = "v"; key = "<leader>cp"; action = "<cmd>CodeCompanionActions<CR>"; options.silent = true; }
-
         # Choose window
         { mode = "n"; key = "<leader>wp"; action = "<Plug>(choosewin)"; }
       ];
@@ -129,16 +123,9 @@ in
              __raw = "function() vim.highlight.on_yank({on_visual = false}) end";
           };
         }
-        # CodeCompanion (sensible chat window)
-        # {
-        #   event = [ "FileType" ];
-        #   pattern = [ "codecompanion" ];
-        #   command = "setlocal nonumber norelativenumber signcolumn=no nolist | let b:gitgutter_enabled = 0";
-        # }
       ];
 
       plugins = {
-        # web-devicons.enable = true;
         mini-icons = {
           enable = true;
           mockDevIcons = true;
@@ -157,6 +144,7 @@ in
               installRustc = false;
             };
             pyright.enable = true;
+            basedpyright.enable = true;
             lua_ls.enable = true;
             nixd.enable = true;
             gopls.enable = true;
@@ -302,22 +290,6 @@ in
           };
         };
 
-        codecompanion = {
-          enable = true;
-          settings = {
-            strategies = {
-              chat.adapter = "opencode";
-              inline.adapter = "opencode";
-              agent.adapter = "opencode";
-            };
-            display.chat.window.opts = {
-              number = false;
-              relativenumber = false;
-              signcolumn = "no";
-            };
-          };
-        };
-
         render-markdown = {
           enable = true;
           settings = {
@@ -328,6 +300,8 @@ in
         octo = {
           enable = true;
         };
+
+        oil.enable = true;
       };
 
       extraPlugins = with pkgs.vimPlugins; [
