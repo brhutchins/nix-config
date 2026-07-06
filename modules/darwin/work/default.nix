@@ -9,6 +9,7 @@
     ./karabiner.nix
     ./yabai.nix
     ../homebrew-work.nix
+    ../devenv.nix
 
     # Shared
     ../aerospace.nix
