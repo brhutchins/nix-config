@@ -183,15 +183,40 @@ in
           enable = true;
           settings = {
             sources = {
-              default = [ "lsp" "path" "buffer" "copilot" ];
-              providers.copilot = {
-                name = "copilot";
-                module = "blink-copilot";
-                score_offset = 100;
-                async = true;
-              };
-              per_filetype = {
-                codecompanion = [ "codecompanion" ];
+              default = [
+                "lsp"
+                "path"
+                "buffer"
+                "copilot"
+                "git"
+                "emoji"
+                "spell"
+              ];
+              providers = {
+                copilot = {
+                  name = "copilot";
+                  module = "blink-copilot";
+                  score_offset = 100;
+                  async = true;
+                };
+                git = {
+                  module = "blink-cmp-git";
+                  name = "git";
+                  score_offset = 100;
+                };
+                emoji = {
+                  module = "blink-emoji";
+                  name = "Emoji";
+                  score_offset = 15;
+                  opts = {
+                    insert = true;
+                  };
+                };
+                spell = {
+                  module = "blink-cmp-spell";
+                  name = "Spell";
+                  score_offset = 100;
+                };
               };
             };
             completion = {
@@ -306,6 +331,9 @@ in
 
       extraPlugins = with pkgs.vimPlugins; [
         blink-copilot
+        blink-cmp-git
+        blink-cmp-spell
+        blink-emoji-nvim
         agda-vim
         diffview-nvim
         haskell-vim

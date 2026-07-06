@@ -16,6 +16,7 @@
       pkgs.claude-code
       pkgs.code-cursor
       pkgs.vimPlugins.vim-choosewin
+      pkgs.vimPlugins.blink-cmp-spell
     ];
   in
     pkg: builtins.elem (lib.getName pkg) whitelist;

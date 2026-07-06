@@ -17,5 +17,6 @@
     "lmstudio"
     "raycast"
     "vim-choosewin"
+    "blink-cmp-spell"
   ];
 }
