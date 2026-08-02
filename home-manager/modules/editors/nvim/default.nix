@@ -202,7 +202,7 @@ in
                 git = {
                   module = "blink-cmp-git";
                   name = "git";
-                  score_offset = 100;
+                  score_offset = 500;
                 };
                 emoji = {
                   module = "blink-emoji";
@@ -265,13 +265,8 @@ in
         neogit = {
           enable = true;
           settings = {
-            integrations.diffview = true;
             use_magit_keybindings = true;
           };
-        };
-
-        diffview = {
-          enable = true;
         };
 
         comment.enable = true;
@@ -315,14 +310,7 @@ in
           };
         };
 
-        render-markdown = {
-          enable = true;
-          settings = {
-            file_types = [ "markdown" "codecompanion" ];
-          };
-        };
-
-        octo = {
+        markview = {
           enable = true;
         };
 
@@ -335,7 +323,6 @@ in
         blink-cmp-spell
         blink-emoji-nvim
         agda-vim
-        diffview-nvim
         haskell-vim
         lean-nvim
         luasnip
