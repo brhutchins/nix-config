@@ -11,9 +11,11 @@ in {
     unstable.mcporter
     zed-editor
     ghostty-bin
+    darktable
+    unstable.gh-dash
     unstable.opencode
     unstable.nixd
-    unstable.sesh
+    unstable.vhs
     llama-cpp
     lumen
     maki
