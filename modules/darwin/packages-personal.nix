@@ -12,7 +12,6 @@ in {
     zed-editor
     ghostty-bin
     darktable
-    unstable.gh-dash
     unstable.opencode
     unstable.nixd
     unstable.vhs

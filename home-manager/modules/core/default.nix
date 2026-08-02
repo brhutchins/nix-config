@@ -86,6 +86,7 @@ in
     ../terminals/kitty
     ../terminals/wezterm
     ../tools/tuicr
+    ../tools/gh-dash
     ../linux/gui
   ];
 
@@ -487,6 +488,12 @@ in
       command = "tuicr"
       description = "open tuicr"
 
+      [[keys.command]]
+      key = "prefix+alt+shift+g"
+      type = "pane"
+      command = "gh-dash"
+      description = "open gh-dash"
+
       # [worktrees]
       # directory = "~/.herdr/worktrees"
 
@@ -607,9 +614,9 @@ in
       # allow_nested = false
       # Experimental local Kitty graphics rendering for attached clients.
       # Requires a Kitty graphics-compatible outer terminal.
-      # kitty_graphics = false
+      kitty_graphics = true
       # Save recent pane screen history across full server restarts.
-      pane_history = false
+      pane_history = true
       # While prefix mode is active, temporarily switch the macOS host input
       # source to an ASCII-capable keyboard layout so prefix commands register
       # even when a CJK IME is active, then restore the previous input source
@@ -916,6 +923,7 @@ in
     #
     # Tools
     local.tools.tuicr.enable = true;
+    local.tools.gh-dash.enable = true;
 
 
     #####
