@@ -85,6 +85,7 @@ in
     ../editors/nvim
     ../terminals/kitty
     ../terminals/wezterm
+    ../tools/tuicr
     ../linux/gui
   ];
 
@@ -478,6 +479,13 @@ in
       key = "prefix+alt+g"
       type = "pane"
       command = "gitu"
+      description = "open gitu"
+
+      [[keys.command]]
+      key = "prefix+alt+d"
+      type = "pane"
+      command = "tuicr"
+      description = "open tuicr"
 
       # [worktrees]
       # directory = "~/.herdr/worktrees"
@@ -902,6 +910,12 @@ in
       nvim.enable = true;
       helix.enable = true;
     };
+
+
+    #####
+    #
+    # Tools
+    local.tools.tuicr.enable = true;
 
 
     #####
