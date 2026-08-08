@@ -32,6 +32,7 @@ let
       pandoc
       procps
       ripgrep
+      rtk
       slides
       tailscale
       tldr
