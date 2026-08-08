@@ -903,6 +903,10 @@ in
     programs.gh = {
       enable = true;
       settings.gitProtocol = "ssh";
+      extensions = [
+        pkgs.unstable.gh-enhance
+        pkgs.unstable.gh-dash
+      ];
     };
 
     home.file.".config/git/allowed_signers" = mkIf cfg.work.enable {

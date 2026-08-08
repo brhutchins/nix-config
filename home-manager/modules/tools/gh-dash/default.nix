@@ -17,7 +17,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.unstable.gh-dash ];
+    home.packages = [ pkgs.unstable.gh-dash pkgs.unstable.delta ];
 
     xdg.configFile."gh-dash/config.yml".source = yamlFormat.generate "gh-dash-config.yml" {
       prSections = [
@@ -30,6 +30,19 @@ in
         { title = "My Issues"; filters = "is:open author:@me"; }
         { title = "Assigned"; filters = "is:open assignee:@me"; }
         { title = "Involved"; filters = "is:open involves:@me -author:@me"; }
+      ];
+
+      keybindings.prs = [
+        {
+          key = "D";
+          name = "Review PR in tuicr";
+          command = "cd {{.RepoPath}} && tuicr pr {{.PrNumber}}";
+        }
+        {
+          key = "T";
+          name = "Open PR actions in enhance";
+          command = "gh enhance -R {{.RepoName}} {{.PrNumber}}";
+        }
       ];
 
       defaults = {
@@ -64,7 +77,7 @@ in
         };
       };
 
-      pager.diff = "tuicr";
+      pager.diff = "delta";
     };
   };
 }
