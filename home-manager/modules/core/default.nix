@@ -18,6 +18,7 @@ let
     utils = [
       bat
       btop
+      devbox
       fd
       fzf
       git
