@@ -39,8 +39,8 @@ darwin-rebuild switch --flake .#MacMini --impure
 | `darwinConfigurations.MBA`           | personal MacBook  | `personal` | `darwin-personal.nix`  | Determinate  |
 | `darwinConfigurations.PLN`  | work laptop       | `work`     | `darwin-pln.nix`       | system nix   |
 
-The `system.stateVersion = 4` constraint is embedded in the host file and must
-not be changed.
+The `system.stateVersion` constraint is embedded in each host file and must not
+be changed (6 on the personal hosts, 4 on the work host).
 
 ## Usage
 
@@ -88,10 +88,11 @@ nix-config/
 │       ├── aerospace.nix         # Shared aerospace settings (per-host bits in hostConfig)
 │       ├── jankyborders.nix      # Shared: unstable.jankyborders for both hosts
 │       ├── touchid.nix           # Shared: PAM sudo_local touchId
+│       ├── trackpad.nix          # Shared: trackpad defaults (tap, right-click, drag)
 │       ├── homebrew-base.nix     # Shared: onActivation.cleanup = "zap"
 │       ├── dev-tools.nix         # Shared: mole + gitu
 │       ├── determinate.nix       # Personal only
-│       ├── devenv.nix            # Personal only
+│       ├── devenv.nix            # Shared: devenv for both profiles
 │       ├── llm.nix               # Personal only (lmstudio)
 │       ├── tsshd.nix             # Personal only (tsshd pkg + launchd agent)
 │       ├── homebrew-personal.nix # homebrew.enable = false + personal casks
@@ -111,12 +112,15 @@ nix-config/
 ├── home-manager/          # home-manager config (user-level)
 │   ├── machines/          # Per-host home-manager entry points
 │   │   ├── darwin-personal.nix
-│   │   └── darwin-hubs-2.nix
+│   │   ├── darwin-pln.nix
+│   │   ├── nixos.nix
+│   │   └── nixos-oracle.nix
 │   └── modules/           # Shared home-manager modules
 │       ├── core/          # Shell, prompt, git, editors, terminals, tmux, zellij
 │       ├── darwin/core/   # Darwin-specific home-manager bits
 │       ├── editors/       # helix, nvim
 │       ├── terminals/     # kitty, wezterm
+│       ├── tools/         # gh-dash, tuicr
 │       ├── linux/         # Linux-only (sway, gui) — unused on Darwin
 │       └── window-managers/
 └── packages/              # Custom package definitions (callPackage sources)
@@ -188,6 +192,7 @@ flowchart TD
     work --> W6["yabai.nix"]
     work --> W7["homebrew-work.nix"]
     work --> W8["thaw.nix *"]
+    work --> W9["devenv.nix"]
 
     personal --> S1["dev-tools.nix"]
     work --> S1
@@ -221,6 +226,7 @@ The split is by **concern**, not by host. Examples:
 - `gc.nix` — work only (Determinate handles GC on personal hosts).
 - `zscaler.nix` — work only (TLS interception trust bundle + env vars).
 - `dev-tools.nix` — shared (`mole` + `gitu` on every host).
+- `devenv.nix` — shared (imported by both aggregators).
 - `touchid.nix`, `homebrew-base.nix` — shared.
 - `thaw.nix` — shared module, but only the work aggregator sets
   `programs.thaw.enable = true`. Personal can opt in by adding the
@@ -231,7 +237,7 @@ The split is by **concern**, not by host. Examples:
 Home-manager is wired in via `home-manager.darwinModules.home-manager`
 in `mkHost`. The machine files (`home-manager/machines/*.nix`) set
 `home-manager.useGlobalPkgs` / `useUserPackages` and declare
-`home-manager.users.barnaby`. Shared home-manager config lives in
+`home-manager.users.${username}` (username from `modules/data`). Shared home-manager config lives in
 `home-manager/modules/core`, which branches on `local.core.work.enable`
 and `local.core.zscaler.enable` (set per-machine) for things like git
 identity, signing keys, and SSL cert paths.
@@ -281,11 +287,12 @@ nix flake update nixpkgs      # one input
 nix flake update --flake .    # from outside the directory
 ```
 
-`nix-darwin`, `home-manager`, and `nixvim` all `follows = "nixpkgs"`, so
-updating `nixpkgs` moves them in lockstep. `maki-nix`, etc. deliberately follows
-`nixpkgs-unstable` (it builds against a different nixpkgs evaluation than the
-rest of the work profile). `flake-parts` does **not** have a `nixpkgs` input (it
-uses `nixpkgs-lib`).
+`nix-darwin`, `home-manager`, `mole-nix`, and `lumen` all
+`follows = "nixpkgs"`, so updating `nixpkgs` moves them in lockstep. `nixvim`
+pins its own nixpkgs (`nixos-26.05`), while `maki-nix`, `tiny-harness-nix`, and
+`herdr-nix` deliberately follow `nixpkgs-unstable` (they build against a
+separate nixpkgs evaluation). `flake-parts` does **not** have a `nixpkgs` input
+(it uses `nixpkgs-lib`).
 
 [flake-parts]: https://github.com/hercules-ci/flake-parts
 [Determinate Systems]: https://determinate.systems/
