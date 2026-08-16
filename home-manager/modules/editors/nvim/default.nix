@@ -68,7 +68,7 @@ in
           extends = "»";
           precedes = "«";
           nbsp = "⣿";
-          tab = "<->";
+          tab = "» ";
         };
 
         # Font
@@ -353,6 +353,10 @@ in
           },
         })
         vim.cmd("colorscheme rose-pine")
+
+        -- Dim listchars (tabs, trailing whitespace, etc.) so whitespace
+        -- indicators don't distract; rendered by the NonText highlight group.
+        vim.api.nvim_set_hl(0, "NonText", { fg = "${c.overlay}" })
 
         -- Custom autopairs rules
         local npairs = require('nvim-autopairs')
