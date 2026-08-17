@@ -24,6 +24,11 @@ in
       default = false;
     };
 
+    copilot.enable = mkOption {
+      type = types.bool;
+      default = false;
+    };
+
   };
 
   config = mkIf cfg.enable {
@@ -187,13 +192,13 @@ in
                 "lsp"
                 "path"
                 "buffer"
-                "copilot"
+              ] ++ optional cfg.copilot.enable "copilot" ++ [
                 "git"
                 "emoji"
                 "spell"
               ];
               providers = {
-                copilot = {
+                copilot = mkIf cfg.copilot.enable {
                   name = "copilot";
                   module = "blink-copilot";
                   score_offset = 100;
@@ -271,7 +276,7 @@ in
 
         comment.enable = true;
 
-        copilot-lua = {
+        copilot-lua = mkIf cfg.copilot.enable {
           enable = true;
           settings.suggestion.enabled = false;
         };
@@ -318,7 +323,6 @@ in
       };
 
       extraPlugins = with pkgs.vimPlugins; [
-        blink-copilot
         blink-cmp-git
         blink-cmp-spell
         blink-emoji-nvim
@@ -339,7 +343,7 @@ in
 
         # Custom plugins
         nvim-oh-lucy-theme
-      ];
+      ] ++ optional cfg.copilot.enable blink-copilot;
 
       extraConfigLua = ''
         require("rose-pine").setup({
