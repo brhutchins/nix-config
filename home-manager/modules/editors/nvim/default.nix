@@ -4,6 +4,7 @@ with lib;
 
 let
   cfg = config.local.editors.nvim;
+  isPersonal = !config.local.core.work.enable;
   c = config.local.theme."rose-pine-slate".colors;
 
   nvim-oh-lucy-theme = with pkgs; vimUtils.buildVimPlugin {
@@ -154,6 +155,7 @@ in
             nixd.enable = true;
             gopls.enable = true;
             clangd.enable = true;
+            texlab.enable = isPersonal;
           };
           onAttach = ''
             vim.api.nvim_create_autocmd("CursorMoved", {
@@ -320,6 +322,11 @@ in
         };
 
         oil.enable = true;
+
+        vimtex = mkIf isPersonal {
+          enable = true;
+          settings.view_method = "general";
+        };
       };
 
       extraPlugins = with pkgs.vimPlugins; [
