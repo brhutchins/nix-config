@@ -20,5 +20,9 @@ in {
     maki
     tiny-harness
     herdr
+
+    # TeX toolchain host-wide; scheme-medium + preview.sty for AUCTeX
+    # preview-latex (texlive.combined.* schemes don't include the preview pkg)
+    (texlive.combine { inherit (texlive) scheme-medium preview; })
   ];
 }

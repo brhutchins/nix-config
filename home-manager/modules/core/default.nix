@@ -83,6 +83,7 @@ in
   imports = [
     ./rose-pine-slate.nix
     ../darwin/core
+    ../editors/emacs
     ../editors/helix
     ../editors/nvim
     ../terminals/kitty

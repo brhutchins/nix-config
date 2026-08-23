@@ -15,6 +15,7 @@
     imports = [ ../modules/core ];
     local = {
       core.gui.enable = true;
+      editors.emacs.enable = true;
     };
   };
 }

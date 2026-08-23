@@ -8,6 +8,7 @@
     ../devenv.nix
     ../determinate.nix
     ../homebrew-personal.nix
+    ../fonts.nix
 
     # Shared
     ../aerospace.nix
