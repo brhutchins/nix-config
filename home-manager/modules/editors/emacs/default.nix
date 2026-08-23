@@ -5,6 +5,13 @@ with lib;
 let
   cfg = config.local.editors.emacs;
   c = config.local.theme."rose-pine-slate".colors;
+
+  # Merged env: nixpkgs aspell only finds dicts via $NIX_PROFILES, which
+  # GUI Emacs doesn't inherit, so we point ASPELL_CONF at this path instead.
+  aspellWithEn = pkgs.symlinkJoin {
+    name = "aspell-with-en-dict";
+    paths = [ pkgs.aspell pkgs.aspellDicts.en ];
+  };
 in
 {
   options.local.editors.emacs = {
@@ -39,7 +46,7 @@ in
         orderless
         consult
 
-         dashboard
+        dashboard
         magit
         rainbow-delimiters
       ];
@@ -67,6 +74,9 @@ in
           (global-evil-surround-mode 1)
           (require 'evil-commentary)
           (evil-commentary-mode 1))
+
+        ;; Flyspell owns C-. (auto-correct); evil-repeat-pop is not worth it.
+        (define-key evil-normal-state-map (kbd "C-.") nil)
 
         (evil-mode 1)
 
@@ -160,6 +170,13 @@ in
         (setq dashboard-center-content t
               dashboard-startup-banner 'logo)
 
+        ;;; Flyspell/aspell ;;;
+        ;; Dicts live outside aspell's own store path; see aspellWithEn above.
+        (setenv "ASPELL_CONF" "dict-dir ${aspellWithEn}/lib/aspell")
+
+        ;;; LaTeX LSP (texlab via built-in eglot) ;;;
+        (add-hook 'LaTeX-mode-hook #'eglot-ensure)
+
         ;;; LaTeX (AUCTeX) ;;;
         (with-eval-after-load 'tex
           (setq TeX-auto-save t
@@ -214,9 +231,9 @@ in
      };
 
      home.packages = [
+       pkgs.texlab
        pkgs.ghostscript
-       pkgs.aspell
-       pkgs.aspellDicts.en
+       aspellWithEn
      ];
 
   };
