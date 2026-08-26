@@ -49,6 +49,9 @@ in
         dashboard
         magit
         rainbow-delimiters
+
+        sly
+
       ];
 
       extraConfig = ''
@@ -227,12 +230,16 @@ in
          (add-hook 'LaTeX-mode-hook #'display-line-numbers-mode)
          (setq reftex-plug-into-AUCTeX t)
 
+        ;;; Common Lisp (SLY) ;;;
+        ;; Absolute store path: GUI Emacs may not inherit a shell PATH.
+        (setq inferior-lisp-program "${pkgs.sbcl}/bin/sbcl")
        '';
      };
 
      home.packages = [
        pkgs.texlab
        pkgs.ghostscript
+       pkgs.sbcl
        aspellWithEn
      ];
 
