@@ -144,6 +144,31 @@ in
         (add-hook 'prog-mode-hook #'display-line-numbers-mode)
         (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
+        ;;; Windows ;;;
+        (defun local/toggle-window-split ()
+          "Switch the frame between a horizontal and vertical split."
+          (interactive)
+(when (= (count-windows) 2)
+            (let* ((windows (window-list nil))
+                   (w1 (car windows))
+                   (w2 (cadr windows))
+                   (b1 (window-buffer w1))
+                   (b2 (window-buffer w2))
+                   (stacked (= (window-left-column w1) (window-left-column w2)))
+                   (b-left (if (< (window-left-column w1) (window-left-column w2))
+                               b1 b2))
+                   (b-right (if (eq b-left b1) b2 b1))
+                   (b-top (if (< (window-top-line w1) (window-top-line w2))
+                              b1 b2))
+                   (b-bottom (if (eq b-top b1) b2 b1)))
+              (delete-other-windows)
+              (let ((win (if stacked (split-window-right) (split-window-below))))
+                ;; stacked -> side by side: top->left, bottom->right
+                ;; side by side -> stacked: left->top, right->bottom
+                (set-window-buffer (selected-window) (if stacked b-top b-left))
+                (set-window-buffer win (if stacked b-bottom b-right))))))
+        (keymap-global-set "C-c t" #'local/toggle-window-split)
+
         ;;; Modeline & icons ;;;
         (require 'doom-modeline)
         (setq doom-modeline-height 25
@@ -190,6 +215,7 @@ in
                                               (pdf . synctex))
                 TeX-source-correlate-start-server t)
           (TeX-source-correlate-mode t)
+          (setq TeX-command-extra-options "-synctex=1")
           (add-hook 'TeX-after-compilation-finished-functions
                     #'TeX-revert-document-buffer)
           (defun local/TeX-compile-on-save ()
