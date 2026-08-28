@@ -149,13 +149,23 @@ in
               installCargo = false;
               installRustc = false;
             };
-            pyright.enable = true;
+            pyright = {
+              enable = true;
+              package = null;
+            };
             basedpyright.enable = true;
-            lua_ls.enable = true;
+            lua_ls = {
+              enable = true;
+              package = null;
+            };
             nixd.enable = true;
             gopls.enable = true;
             clangd.enable = true;
             texlab.enable = isPersonal;
+            csharp_ls = {
+              enable = !isPersonal;
+              package = null;
+            };
           };
           onAttach = ''
             vim.api.nvim_create_autocmd("CursorMoved", {
