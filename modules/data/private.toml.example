@@ -15,3 +15,17 @@ work = "work-username"
 # Just the key name (e.g. "id_ed25519"), no path or .pub suffix.
 personal = "id_ed25519"
 work = "id_ed25519_work"
+
+[atuin.client]
+# This host's Atuin CLI: where it syncs history and which AI bridge it calls.
+syncAddress = "https://example.com"
+aiEndpoint  = "https://example.com:8443"
+# aiKey = "..."   # token this client sends to the AI bridge
+
+[atuin.server]
+# The Atuin AI bridge hosted on this host, plus its inference backend.
+# Models advertised to clients; the first is the default. Clients may select
+# any entry from the list.
+# models = ["model-id-1", "model-id-2"]
+# aiKey = "..."          # token the bridge requires from clients
+# inferenceKey = "..."   # token the bridge sends to the inference server

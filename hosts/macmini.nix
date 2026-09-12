@@ -8,6 +8,10 @@ in {
     hostConfig = { lib, pkgs, username, ... }: {
       local.darwin.minimize = true;
 
+      local.darwin.atuinServer.enable = true;
+      local.darwin.atuinAiServer.enable = true;
+      local.darwin.tailscaleServe.enable = true;
+
       system.stateVersion = 6;
       system.configurationRevision = self.rev or null;
 

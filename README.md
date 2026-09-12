@@ -42,6 +42,18 @@ darwin-rebuild switch --flake .#MacMini --impure
 The `system.stateVersion` constraint is embedded in each host file and must not
 be changed (6 on the personal hosts, 4 on the work host).
 
+## Atuin sync + AI
+
+Private values live under `[atuin]` in `~/.config/nix-config/private.toml`:
+
+| Key           | Used by          | Notes                                                                 |
+| ------------- | ---------------- | --------------------------------------------------------------------- |
+| `syncAddress` | clients          | Sync server URL.
+| `aiEndpoint`  | clients          | AI bridge URL.     |
+| `aiToken`     | clients + server | Optional bearer token; must match `AUTH_TOKEN` on server.            |
+| `model`   | server           | Model ID; without it the AI bridge stays undeployed.             |
+
+
 ## Usage
 
 From this directory:
@@ -95,6 +107,9 @@ nix-config/
 │       ├── devenv.nix            # Shared: devenv for both profiles
 │       ├── llm.nix               # Personal only (lmstudio)
 │       ├── tsshd.nix             # Personal only (tsshd pkg + launchd agent)
+│       ├── atuin-server.nix      # Personal/MacMini: Atuin sync server (launchd daemon)
+│       ├── atuin-ai-server.nix   # Personal/MacMini: Atuin AI bridge (gated on data.atuin.omlxModel)
+│       ├── tailscale-serve.nix   # Personal/MacMini: Tailscale Serve TLS -> loopback services
 │       ├── homebrew-personal.nix # homebrew.enable = false + personal casks
 │       ├── homebrew-work.nix     # homebrew.enable = true  + work casks
 │       ├── unfree-personal.nix   # unstable overlay + allowUnfreePredicate
@@ -120,11 +135,12 @@ nix-config/
 │       ├── darwin/core/   # Darwin-specific home-manager bits
 │       ├── editors/       # helix, nvim
 │       ├── terminals/     # kitty, wezterm
-│       ├── tools/         # gh-dash, tuicr
+│       ├── tools/         # gh-dash, tuicr, atuin
 │       ├── linux/         # Linux-only (sway, gui) — unused on Darwin
 │       └── window-managers/
 └── packages/              # Custom package definitions (callPackage sources)
     ├── thaw/              # Thaw menu bar manager (consumed by modules/darwin/thaw.nix)
+    ├── atuin-ai-server/   # Atuin AI bridge (Elixir + Gleam mix release)
     └── stackline/
 ```
 
@@ -183,6 +199,9 @@ flowchart TD
     personal --> P5["devenv.nix"]
     personal --> P6["determinate.nix"]
     personal --> P7["homebrew-personal.nix"]
+    personal --> P8["atuin-server.nix"]
+    personal --> P9["atuin-ai-server.nix"]
+    personal --> P10["tailscale-serve.nix"]
 
     work --> W1["unfree-work.nix"]
     work --> W2["packages-work.nix"]

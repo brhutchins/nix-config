@@ -5,6 +5,9 @@
     ../packages-personal.nix
     ../llm.nix
     ../tsshd.nix
+    ../atuin-server.nix
+    ../atuin-ai-server.nix
+    ../tailscale-serve.nix
     ../devenv.nix
     ../determinate.nix
     ../homebrew-personal.nix

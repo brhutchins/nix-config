@@ -22,6 +22,9 @@ let
   userName   = git.userName or {};
   signingKey = git.signingKey or {};
   email      = private.email or {};
+  atuin      = private.atuin or {};
+  atuinClient = atuin.client or {};
+  atuinServer = atuin.server or {};
 in {
 
   username = private.username or "user";
@@ -40,6 +43,24 @@ in {
       # Just the key name (e.g. "id_ed25519"), no path or .pub suffix.
       personal = signingKey.personal or "id_ed25519";
       work = signingKey.work or "id_ed25519_work";
+    };
+  };
+
+  # Atuin, split by which side of the AI auth boundary each value belongs to:
+  #   client.*  — this host's CLI: the sync server and AI bridge it talks to
+  #   server.*  — the AI bridge hosted here and the inference backend it calls
+  # Missing keys stay null (absent, not "") so gated modules can detect
+  # "not configured" rather than deploying a broken value.
+  atuin = {
+    client = {
+      syncAddress = atuinClient.syncAddress or null;
+      aiEndpoint = atuinClient.aiEndpoint or null;
+      aiKey = atuinClient.aiKey or null;
+    };
+    server = {
+      models = atuinServer.models or [];
+      aiKey = atuinServer.aiKey or null;
+      inferenceKey = atuinServer.inferenceKey or null;
     };
   };
 }

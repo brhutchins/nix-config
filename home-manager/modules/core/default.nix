@@ -88,6 +88,7 @@ in
     ../editors/nvim
     ../tools/tuicr
     ../tools/gh-dash
+    ../tools/atuin
     ../linux/gui
   ];
 
