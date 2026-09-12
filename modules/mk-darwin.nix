@@ -19,6 +19,7 @@ in
       modules = [
         ./overlays.nix
         ./darwin/common.nix
+        ./darwin/minimize.nix
         profile
         inputs.home-manager.darwinModules.home-manager
         {

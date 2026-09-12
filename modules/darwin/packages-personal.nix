@@ -1,28 +1,31 @@
-{ pkgs, inputs, system, ... }:
+{ config, lib, pkgs, inputs, system, ... }:
 let
   lumen = inputs.lumen.packages.${system}.default;
   maki = inputs.maki-nix.packages.${system}.default;
   tiny-harness = inputs.tiny-harness-nix.packages.${system}.default;
   herdr = inputs.herdr-nix.packages.${system}.default;
 in {
-  environment.systemPackages = with pkgs; [
-    raycast
-    unstable.pi-coding-agent
-    unstable.mcporter
-    zed-editor
-    ghostty-bin
-    darktable
-    unstable.opencode
-    unstable.nixd
-    unstable.vhs
-    llama-cpp
-    lumen
-    maki
-    tiny-harness
-    herdr
-
-    # TeX toolchain host-wide; scheme-medium + preview.sty for AUCTeX
-    # preview-latex (texlive.combined.* schemes don't include the preview pkg)
-    (texlive.combine { inherit (texlive) scheme-medium preview csquotes; })
+  environment.systemPackages = lib.mkMerge [
+    (lib.mkIf (!config.local.darwin.minimize) (with pkgs; [
+      zed-editor
+      darktable
+      llama-cpp
+      # TeX toolchain host-wide; scheme-medium + preview.sty for AUCTeX
+      # preview-latex (texlive.combined.* schemes don't include the preview pkg)
+      (texlive.combine { inherit (texlive) scheme-medium preview csquotes; })
+    ]))
+    (with pkgs; [
+      raycast
+      unstable.pi-coding-agent
+      unstable.mcporter
+      ghostty-bin
+      unstable.opencode
+      unstable.nixd
+      unstable.vhs
+      lumen
+      maki
+      tiny-harness
+      herdr
+    ])
   ];
 }

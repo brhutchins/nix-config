@@ -86,8 +86,6 @@ in
     ../editors/emacs
     ../editors/helix
     ../editors/nvim
-    ../terminals/kitty
-    ../terminals/wezterm
     ../tools/tuicr
     ../tools/gh-dash
     ../linux/gui
@@ -947,9 +945,6 @@ in
     programs.firefox = mkIf (cfg.gui.enable && isLinux) {
       enable = true;
     };
-
-    local.terminals.kitty.enable = mkIf cfg.gui.enable true;
-    local.terminals.wezterm.enable = mkIf cfg.gui.enable true;
 
 
     #####

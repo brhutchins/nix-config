@@ -5,7 +5,9 @@ in {
   flake.darwinConfigurations.MacMini = mkHost {
     profile = ../modules/darwin/personal;
     home = ../home-manager/machines/darwin-personal.nix;
-    hostConfig = {
+    hostConfig = { lib, pkgs, username, ... }: {
+      local.darwin.minimize = true;
+
       system.stateVersion = 6;
       system.configurationRevision = self.rev or null;
 
