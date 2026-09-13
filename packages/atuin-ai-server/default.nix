@@ -47,7 +47,7 @@ let
 
     outputHashMode = "recursive";
     outputHashAlgo = "sha256";
-    outputHash = "sha256-jI0NjngwqFsdxahLB6uzTxlhpTA1RdwHbaWqxhObZOg=";
+    outputHash = "sha256-3qHgk3QRRebDW3pqygWuIvgynp7JmwSyZBjXrSLRZ/4=";
 
     impureEnvVars = lib.fetchers.proxyImpureEnvVars;
 
@@ -64,6 +64,10 @@ let
 
     buildPhase = ''
       runHook preBuild
+      # Mix/Hex uses its own CA setting instead of SSL_CERT_FILE. Nixpkgs'
+      # cacert hook sets NIX_SSL_CERT_FILE to the standard bundle by default,
+      # or to the Zscaler-inclusive bundle passed through for this FOD.
+      export HEX_CACERTS_PATH="$NIX_SSL_CERT_FILE"
       mix deps.get --only prod
       ( cd "$MIX_DEPS_PATH/atuin_ai_core" && gleam deps download )
       runHook postBuild
