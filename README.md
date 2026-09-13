@@ -44,14 +44,19 @@ be changed (6 on the personal hosts, 4 on the work host).
 
 ## Atuin sync + AI
 
-Private values live under `[atuin]` in `~/.config/nix-config/private.toml`:
+Private values live under `[atuin]` in `~/.config/nix-config/private.toml`.
+The file is per-host local config (not just secrets), so each machine points at
+its own endpoints:
 
-| Key           | Used by          | Notes                                                                 |
-| ------------- | ---------------- | --------------------------------------------------------------------- |
-| `syncAddress` | clients          | Sync server URL.
-| `aiEndpoint`  | clients          | AI bridge URL.     |
-| `aiToken`     | clients + server | Optional bearer token; must match `AUTH_TOKEN` on server.            |
-| `model`   | server           | Model ID; without it the AI bridge stays undeployed.             |
+| Section / key            | Used by        | Notes                                                                 |
+| ------------------------ | -------------- | --------------------------------------------------------------------- |
+| `[atuin.sync] address`   | clients        | Sync server URL. Omit on hosts that don't sync (e.g. PLN).            |
+| `[atuin.ai.client] endpoint` | clients    | AI bridge URL for this host's CLI.                                    |
+| `[atuin.ai.client] key`  | clients        | Optional token the CLI presents; must match the bridge's server key.  |
+| `[atuin.ai.server] models` | server       | Advertised models; without a non-empty list the AI bridge stays undeployed. |
+| `[atuin.ai.server] key`  | server         | Optional `AUTH_TOKEN` the bridge requires from clients.               |
+| `[atuin.ai.server] inferenceKey` | server | Optional token the bridge sends to the inference backend.            |
+
 
 
 ## Usage
@@ -108,7 +113,7 @@ nix-config/
 │       ├── llm.nix               # Personal only (lmstudio)
 │       ├── tsshd.nix             # Personal only (tsshd pkg + launchd agent)
 │       ├── atuin-server.nix      # Personal/MacMini: Atuin sync server (launchd daemon)
-│       ├── atuin-ai-server.nix   # Personal/MacMini: Atuin AI bridge (gated on data.atuin.omlxModel)
+│       ├── atuin-ai-server.nix   # Personal/MacMini + work/PLN: Atuin AI bridge (gated on data.atuin.ai.server.models)
 │       ├── tailscale-serve.nix   # Personal/MacMini: Tailscale Serve TLS -> loopback services
 │       ├── homebrew-personal.nix # homebrew.enable = false + personal casks
 │       ├── homebrew-work.nix     # homebrew.enable = true  + work casks
@@ -212,6 +217,7 @@ flowchart TD
     work --> W7["homebrew-work.nix"]
     work --> W8["thaw.nix *"]
     work --> W9["devenv.nix"]
+    work --> W10["atuin-ai-server.nix"]
 
     personal --> S1["dev-tools.nix"]
     work --> S1

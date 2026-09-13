@@ -16,16 +16,19 @@ work = "work-username"
 personal = "id_ed25519"
 work = "id_ed25519_work"
 
-[atuin.client]
-# This host's Atuin CLI: where it syncs history and which AI bridge it calls.
-syncAddress = "https://example.com"
-aiEndpoint  = "https://example.com:8443"
-# aiKey = "..."   # token this client sends to the AI bridge
+[atuin.sync]
+# This host's Atuin CLI sync target. Omit on hosts that run without syncing.
+address = "https://example.com"
 
-[atuin.server]
+[atuin.ai.client]
+# Which AI bridge this host's CLI calls and the token it presents.
+endpoint = "https://example.com"
+# key = "..."   # token this client sends; must match the bridge's key
+
+[atuin.ai.server]
 # The Atuin AI bridge hosted on this host, plus its inference backend.
 # Models advertised to clients; the first is the default. Clients may select
-# any entry from the list.
+# any entry from the list. Empty => the bridge stays undeployed.
 # models = ["model-id-1", "model-id-2"]
-# aiKey = "..."          # token the bridge requires from clients
-# inferenceKey = "..."   # token the bridge sends to the inference server
+# key = "..."          # AUTH_TOKEN the bridge requires from clients
+# inferenceKey = "..." # token the bridge sends to the inference server

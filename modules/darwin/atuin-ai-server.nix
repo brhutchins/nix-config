@@ -6,11 +6,11 @@ let
   pkg = pkgs.unstable.callPackage ../../packages/atuin-ai-server { };
 
   # Models the bridge advertises to clients; the first is the default.
-  models = data.atuin.server.models;
+  models = data.atuin.ai.server.models;
   # Token this bridge requires from its clients (client → bridge).
-  serverAiKey = data.atuin.server.aiKey;
+  serverAiKey = data.atuin.ai.server.key;
   # Token this bridge presents to the inference backend (bridge → inference).
-  inferenceKey = data.atuin.server.inferenceKey;
+  inferenceKey = data.atuin.ai.server.inferenceKey;
 
   cacheDir = "/Users/${username}/.cache/atuin-ai-server";
   logFile = "/Users/${username}/.atuin-ai-server.log";
@@ -80,10 +80,10 @@ in
   config = lib.mkMerge [
     {
       warnings = lib.optional (cfg.enable && models == []) ''
-        local.darwin.atuinAiServer.enable is set, but data.atuin.server.models is
-        empty in ~/.config/nix-config/private.toml, so the Atuin AI server is
+        local.darwin.atuinAiServer.enable is set, but data.atuin.ai.server.models
+        is empty in ~/.config/nix-config/private.toml, so the Atuin AI server is
         not being deployed (sync and Tailscale Serve for it are unaffected).
-        Add `models = ["<id>", ...]` under [atuin.server] in private.toml and
+        Add `models = ["<id>", ...]` under [atuin.ai.server] in private.toml and
         rebuild.
       '';
     }

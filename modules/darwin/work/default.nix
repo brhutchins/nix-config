@@ -8,6 +8,7 @@
     ./zscaler.nix
     ./karabiner.nix
     ./yabai.nix
+    ../atuin-ai-server.nix
     ../homebrew-work.nix
     ../devenv.nix
 

@@ -20,6 +20,10 @@
       core.zscaler.enable = true;
       core.work.enable = true;
       editors.nvim.copilot.enable = true;
+      tools.atuin = {
+        enable = true;
+        sync = false;
+      };
     };
   };
 }
