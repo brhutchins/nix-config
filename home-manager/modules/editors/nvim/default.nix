@@ -162,7 +162,11 @@ in
             gopls.enable = true;
             clangd.enable = true;
             texlab.enable = isPersonal;
-            csharp_ls = {
+            roslyn_ls = {
+              enable = !isPersonal;
+              package = null;
+            };
+            jdtls = {
               enable = !isPersonal;
               package = null;
             };
