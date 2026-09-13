@@ -13,7 +13,7 @@ in {
     pkgs.llama-cpp
     pkgs.unstable.opencode
     pkgs.unstable.pi-coding-agent
-    pkgs.unstable.mcporter
+    pkgs.mcporter
     pkgs.nh
     maki
     herdr
