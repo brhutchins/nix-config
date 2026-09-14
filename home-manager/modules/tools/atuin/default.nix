@@ -54,6 +54,7 @@ in
       enableBashIntegration = true;
       forceOverwriteSettings = true;
       settings = {
+        filter_mode_shell_up_key_binding = "directory";
         ai = {
           enabled = aiEnabled;
         }
