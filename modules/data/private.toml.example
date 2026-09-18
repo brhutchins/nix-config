@@ -30,5 +30,6 @@ endpoint = "https://example.com"
 # Models advertised to clients; the first is the default. Clients may select
 # any entry from the list. Empty => the bridge stays undeployed.
 # models = ["model-id-1", "model-id-2"]
+# upstream = "http://localhost:8001/v1"
 # key = "..."          # AUTH_TOKEN the bridge requires from clients
 # inferenceKey = "..." # token the bridge sends to the inference server

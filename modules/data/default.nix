@@ -66,6 +66,7 @@ in {
       };
       server = {
         models = atuinAiServer.models or [];
+        upstream = atuinAiServer.upstream or "http://localhost:8001/v1";
         key = atuinAiServer.key or null;
         inferenceKey = atuinAiServer.inferenceKey or null;
       };

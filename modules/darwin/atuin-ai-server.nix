@@ -72,7 +72,7 @@ in
 
     upstream = lib.mkOption {
       type = lib.types.str;
-      default = "http://localhost:8001/v1";
+      default = data.atuin.ai.server.upstream;
       description = "OpenAI-compatible endpoint of the inference server.";
     };
   };
