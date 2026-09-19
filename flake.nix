@@ -26,10 +26,6 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
-    lumen = {
-      url = "github:jnsahaj/lumen";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     flake-parts.url = "github:hercules-ci/flake-parts";
     herdr-nix = {
       url = "github:ogulcancelik/herdr";

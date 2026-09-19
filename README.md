@@ -312,7 +312,7 @@ nix flake update nixpkgs      # one input
 nix flake update --flake .    # from outside the directory
 ```
 
-`nix-darwin`, `home-manager`, `mole-nix`, and `lumen` all
+`nix-darwin`, `home-manager`, and `mole-nix` all
 `follows = "nixpkgs"`, so updating `nixpkgs` moves them in lockstep. `nixvim`
 pins its own nixpkgs (`nixos-26.05`), while `maki-nix`, `tiny-harness-nix`, and
 `herdr-nix` deliberately follow `nixpkgs-unstable` (they build against a
