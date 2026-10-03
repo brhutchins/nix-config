@@ -36,7 +36,7 @@ in
     programs.nixvim = {
       enable = true;
       defaultEditor = true;
-      nixpkgs.source = pkgs.path;
+      nixpkgs.pkgs = pkgs;
 
       viAlias = true;
       vimAlias = true;
