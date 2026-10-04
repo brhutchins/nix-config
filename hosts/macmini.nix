@@ -15,6 +15,9 @@ in {
         enable = true;
         formats = [ "html" "json" ];
         baseUrl = "https://macmini.tail09722.ts.net/searxng/";
+        # pkgs.unstable.searxng carries curl_cffi 0.16, which needs the
+        # curl-impersonate 2.2.2 override for a current Chrome profile.
+        package = pkgs.unstable.searxng;
       };
 
       system.stateVersion = 6;

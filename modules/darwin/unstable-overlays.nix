@@ -24,5 +24,25 @@
       vendorHash = "sha256-NqZlxCbXfH4OJQGEVQwA6uu5LLlKDmwGYDRM6V8U/+4=";
       checkFlags = (old.checkFlags or [ ]) ++ [ "-skip" "TestRegistryConfigCompatibilityGolden" ];
     });
+
+    # nixpkgs ships curl-impersonate 2.1.1, which lacks the chrome136/chrome142
+    # profiles. `curl_cffi` 0.16.0 (used by pkgs.unstable.searxng) resolves its
+    # bare "chrome" alias to chrome136, so nixpkgs' curl-cffi disables its
+    # impersonation tests with "Impersonating chrome136 is not supported".
+    # Upstream 2.2.2 adds chrome136/142/145/146/150 and its vendored deps
+    # (curl, brotli, BoringSSL, nghttp2, ngtcp2, nghttp3, zlib, zstd, libidn2)
+    # are identical to 2.1.1's deps.nix, so only `version` and `src` need to
+    # change (overrideAttrs does not re-evaluate `src` from a new `version`).
+    # The Darwin linker patch and the build-libidn2.sh substitution still apply
+    # unchanged to v2.2.2 (verified against the tag commit).
+    curl-impersonate = prev.curl-impersonate.overrideAttrs (old: {
+      version = "2.2.2";
+      src = prev.fetchFromGitHub {
+        owner = "lexiforest";
+        repo = "curl-impersonate";
+        rev = "107d67f9f7a518334b1b11e4810637e70b2671a7"; # v2.2.2
+        hash = "sha256-BrMhM18L/tLjGMKu6JUPOzeuUQzuSCZzcCyJPHJWp20=";
+      };
+    });
   })
 ]

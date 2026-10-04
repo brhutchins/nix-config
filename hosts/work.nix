@@ -5,7 +5,7 @@ in {
   flake.darwinConfigurations.PLN = mkHost {
     profile = ../modules/darwin/work;
     home = ../home-manager/machines/darwin-pln.nix;
-    hostConfig = {
+    hostConfig = { pkgs, ... }: {
       system.stateVersion = 4;  # DO NOT change
       system.configurationRevision = self.rev or null;
 
@@ -15,6 +15,9 @@ in {
         port = 9443;
         formats = [ "json" ];
         caBundle = "/etc/ssl/certs/ca-bundle-with-zscaler.crt";
+        # pkgs.unstable.searxng carries curl_cffi 0.16, which needs the
+        # curl-impersonate 2.2.2 override for a current Chrome profile.
+        package = pkgs.unstable.searxng;
       };
 
       services.aerospace.settings.on-window-detected = [
