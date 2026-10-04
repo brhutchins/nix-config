@@ -38,6 +38,10 @@
       url = "github:brhutchins/pi-vim";
       flake = false;
     };
+    pi-research-mode = {
+      url = "github:brhutchins/pi-research-mode";
+      flake = false;
+    };
   };
 
   outputs = inputs@{ flake-parts, ... }:

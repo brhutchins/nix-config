@@ -558,6 +558,22 @@
         "type": "github"
       }
     },
+    "pi-research-mode": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791117124,
+        "narHash": "sha256-A+WL80WsRdy4nwjbVYjrFmnZpeJignD42uaM+3uqxTk=",
+        "owner": "brhutchins",
+        "repo": "pi-research-mode",
+        "rev": "c7c9f30f66fb49d80f3873e454eb895945ffdaee",
+        "type": "github"
+      },
+      "original": {
+        "owner": "brhutchins",
+        "repo": "pi-research-mode",
+        "type": "github"
+      }
+    },
     "pi-vim": {
       "flake": false,
       "locked": {
@@ -587,6 +603,7 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixvim": "nixvim",
         "pi-nix": "pi-nix",
+        "pi-research-mode": "pi-research-mode",
         "pi-vim": "pi-vim",
         "tiny-harness-nix": "tiny-harness-nix"
       }

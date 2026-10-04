@@ -110,6 +110,16 @@ in
       force = true;
     };
 
+    # Research mode: a read-only session mode (/research or --research) that
+    # disables write tools, restricts bash to read-only commands, and declares
+    # the ketch MCP tools directly to the model while active. Source lives in
+    # github:brhutchins/pi-research-mode (pinned in flake.lock); Pi loads the
+    # directory because it contains an index.ts entry point.
+    home.file.".pi/agent/extensions/research-mode" = {
+      source = "${inputs.pi-research-mode}/extensions/research-mode";
+      force = true;
+    };
+
     # rose-pine-slate theme for pi, generated from the shared palette (piTheme
     # is defined in the let block above).
     home.file.".pi/agent/themes/rose-pine-slate.json".text =
@@ -131,6 +141,28 @@ in
           tmp="$(mktemp)"
           ${pkgs.jq}/bin/jq --arg p "$pkg" '.packages = ((.packages // []) + [$p])' "$settings" > "$tmp"
           mv "$tmp" "$settings"
+        fi
+      '';
+
+    # ketch's MCP server: search / code / docs / scrape / crawl / tag as MCP
+    # tools over stdio, on the same config and backends as the CLI. Like
+    # settings.json, mcp.json is owned and mutated by Pi (`/mcp`, `pi mcp
+    # add`), so merge the entry in idempotently rather than taking the file
+    # over with home.file. The command is the Nix store path, so the server
+    # does not depend on Pi inheriting a PATH that contains ketch.
+    home.activation.ketchMcpServer =
+      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        mcp="${config.home.homeDirectory}/.pi/agent/mcp.json"
+        cmd="${pkgs.unstable.ketch}/bin/ketch"
+        mkdir -p "$(dirname "$mcp")"
+        [ -f "$mcp" ] || printf '{"mcpServers":{}}\n' > "$mcp"
+        if ! ${pkgs.jq}/bin/jq -e --arg cmd "$cmd" \
+              '(.mcpServers.ketch.command == $cmd) and (.mcpServers.ketch.args == ["mcp", "serve"])' \
+              "$mcp" >/dev/null 2>&1; then
+          tmp="$(mktemp)"
+          ${pkgs.jq}/bin/jq --arg cmd "$cmd" \
+            '.mcpServers = ((.mcpServers // {}) + { ketch: { command: $cmd, args: ["mcp", "serve"] } })' \
+            "$mcp" > "$tmp" && mv "$tmp" "$mcp"
         fi
       '';
   };
