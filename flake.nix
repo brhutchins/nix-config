@@ -31,6 +31,13 @@
       url = "github:ogulcancelik/herdr";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+    pi-nix = {
+      url = "github:earendil-works/pi/stable";
+    };
+    pi-vim = {
+      url = "github:brhutchins/pi-vim";
+      flake = false;
+    };
   };
 
   outputs = inputs@{ flake-parts, ... }:

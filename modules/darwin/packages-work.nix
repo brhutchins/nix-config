@@ -12,7 +12,6 @@ in {
     pkgs.unstable.cursor-cli
     pkgs.llama-cpp
     pkgs.unstable.opencode
-    pkgs.unstable.pi-coding-agent
     pkgs.mcporter
     pkgs.nh
     maki

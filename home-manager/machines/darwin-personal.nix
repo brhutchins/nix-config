@@ -17,6 +17,7 @@
       core.gui.enable = true;
       editors.emacs.enable = true;
       tools.atuin.enable = true;
+      tools.pi.enable = true;
     };
   };
 }

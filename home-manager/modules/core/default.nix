@@ -89,6 +89,7 @@ in
     ../tools/tuicr
     ../tools/gh-dash
     ../tools/atuin
+    ../tools/pi
     ../linux/gui
   ];
 

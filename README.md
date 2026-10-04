@@ -140,7 +140,7 @@ nix-config/
 │       ├── darwin/core/   # Darwin-specific home-manager bits
 │       ├── editors/       # helix, nvim
 │       ├── terminals/     # kitty, wezterm
-│       ├── tools/         # gh-dash, tuicr, atuin
+│       ├── tools/         # gh-dash, tuicr, atuin, pi
 │       ├── linux/         # Linux-only (sway, gui) — unused on Darwin
 │       └── window-managers/
 └── packages/              # Custom package definitions (callPackage sources)

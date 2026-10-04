@@ -24,6 +24,7 @@
         enable = true;
         sync = false;
       };
+      tools.pi.enable = true;
     };
   };
 }

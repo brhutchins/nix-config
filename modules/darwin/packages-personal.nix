@@ -15,7 +15,6 @@ in {
     ]))
     (with pkgs; [
       raycast
-      unstable.pi-coding-agent
       mcporter
       ghostty-bin
       unstable.opencode
