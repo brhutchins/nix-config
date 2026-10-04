@@ -21,6 +21,7 @@ let
       base_url = cfg.baseUrl;
     };
     search = {
+      safe_search = 1;
       formats = cfg.formats;
     };
   };

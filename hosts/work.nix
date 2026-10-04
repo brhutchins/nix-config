@@ -18,6 +18,14 @@ in {
         # pkgs.unstable.searxng carries curl_cffi 0.16, which needs the
         # curl-impersonate 2.2.2 override for a current Chrome profile.
         package = pkgs.unstable.searxng;
+        settings.engines = [
+          { name = "bing"; disabled = false; }
+          # Disable torrent/piracy engines on the work instance.
+          { name = "kickass"; disabled = true; }
+          { name = "piratebay"; disabled = true; }
+          { name = "solidtorrents"; disabled = true; }
+          { name = "bt4g"; disabled = true; }
+        ];
       };
 
       # DeGoog is disabled on PLN for now (SearXNG above is the search
