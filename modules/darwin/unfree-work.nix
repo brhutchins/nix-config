@@ -7,6 +7,7 @@
           "claude-code"
           "cursor-cli"
         ];
+        overlays = import ./unstable-overlays.nix;
       };
     })
   ];

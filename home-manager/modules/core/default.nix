@@ -36,6 +36,7 @@ let
       slides
       tailscale
       tldr
+      unstable.ketch
       unzip
       xh
       zoxide

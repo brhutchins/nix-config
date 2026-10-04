@@ -6,6 +6,7 @@
         config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
           "lmstudio"
         ];
+        overlays = import ./unstable-overlays.nix;
       };
     })
     (self: super: {
