@@ -64,8 +64,9 @@ ketch  can query a self-hosted SearXNG instead of paid backends. One module, two
 - **PLN:** loopback `127.0.0.1:9443`, JSON API only.
   `local.tools.pi.searxngUrl` points ketch at it.
 - **MacMini:** loopback with the web UI plus the JSON API, exposed over the
-  tailnet by Tailscale Serve (`--https=9443`). MacMini and the MacBook point
-  ketch at `https://macmini.tail09722.ts.net:9443`.
+  tailnet by Tailscale Serve as a `/searxng` path mount on 443 (shared with
+  Atuin sync). MacMini and the MacBook point ketch at
+  `https://macmini.tail09722.ts.net/searxng`.
 
 `modules/darwin/searxng.nix` runs `searxng-run` as a launchd daemon. The
 `server.secret_key` is generated on first start into

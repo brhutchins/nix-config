@@ -42,8 +42,21 @@ in
 
     searxngHttpsPort = lib.mkOption {
       type = lib.types.port;
-      default = 9443;
-      description = "Public (tailnet) HTTPS port for SearXNG.";
+      default = 443;
+      description = ''
+        Public (tailnet) HTTPS port for SearXNG. Defaults to 443, shared with
+        Atuin sync via a path mount so the URL needs no port.
+      '';
+    };
+
+    searxngPath = lib.mkOption {
+      type = lib.types.str;
+      default = "/searxng";
+      description = ''
+        Path under the HTTPS port at which SearXNG is mounted. Must match the
+        path of `local.darwin.searxng.baseUrl`. Tailscale Serve strips it before
+        forwarding; SearXNG re-adds it from base_url (its FlaskFix middleware).
+      '';
     };
   };
 
@@ -69,7 +82,7 @@ in
       '' + lib.optionalString (models != []) ''
         "$TS" serve --bg --yes --https=${toString cfg.aiHttpsPort} http://127.0.0.1:${toString cfg.aiLocalPort}
       '' + lib.optionalString config.local.darwin.searxng.enable ''
-        "$TS" serve --bg --yes --https=${toString cfg.searxngHttpsPort} http://127.0.0.1:${toString cfg.searxngLocalPort}
+        "$TS" serve --bg --yes --https=${toString cfg.searxngHttpsPort} --set-path=${cfg.searxngPath} http://127.0.0.1:${toString cfg.searxngLocalPort}
       '';
 
       serviceConfig = {

@@ -14,7 +14,7 @@ in {
       local.darwin.searxng = {
         enable = true;
         formats = [ "html" "json" ];
-        baseUrl = "https://macmini.tail09722.ts.net:9443/";
+        baseUrl = "https://macmini.tail09722.ts.net/searxng/";
       };
 
       system.stateVersion = 6;
