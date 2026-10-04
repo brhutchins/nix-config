@@ -3,7 +3,7 @@
 let
   cfg = config.local.darwin.tailscaleServe;
   data = import ../data;
-  models = data.atuin.server.models;
+  models = data.atuin.ai.server.models;
   tailscale = config.services.tailscale.package;
 in
 {
@@ -33,6 +33,18 @@ in
       default = 8443;
       description = "Public (tailnet) HTTPS port for the Atuin AI server.";
     };
+
+    searxngLocalPort = lib.mkOption {
+      type = lib.types.port;
+      default = 8081;
+      description = "Loopback port of the SearXNG instance.";
+    };
+
+    searxngHttpsPort = lib.mkOption {
+      type = lib.types.port;
+      default = 9443;
+      description = "Public (tailnet) HTTPS port for SearXNG.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -56,6 +68,8 @@ in
         "$TS" serve --bg --yes --https=${toString cfg.syncHttpsPort} http://127.0.0.1:${toString cfg.syncLocalPort}
       '' + lib.optionalString (models != []) ''
         "$TS" serve --bg --yes --https=${toString cfg.aiHttpsPort} http://127.0.0.1:${toString cfg.aiLocalPort}
+      '' + lib.optionalString config.local.darwin.searxng.enable ''
+        "$TS" serve --bg --yes --https=${toString cfg.searxngHttpsPort} http://127.0.0.1:${toString cfg.searxngLocalPort}
       '';
 
       serviceConfig = {

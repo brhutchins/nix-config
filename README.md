@@ -57,7 +57,21 @@ its own endpoints:
 | `[atuin.ai.server] key`  | server         | Optional `AUTH_TOKEN` the bridge requires from clients.               |
 | `[atuin.ai.server] inferenceKey` | server | Optional token the bridge sends to the inference backend.            |
 
+## Web search (SearXNG + ketch)
 
+ketch  can query a self-hosted SearXNG instead of paid backends. One module, two instances:
+
+- **PLN:** loopback `127.0.0.1:9443`, JSON API only.
+  `local.tools.pi.searxngUrl` points ketch at it.
+- **MacMini:** loopback with the web UI plus the JSON API, exposed over the
+  tailnet by Tailscale Serve (`--https=9443`). MacMini and the MacBook point
+  ketch at `https://macmini.tail09722.ts.net:9443`.
+
+`modules/darwin/searxng.nix` runs `searxng-run` as a launchd daemon. The
+`server.secret_key` is generated on first start into
+`~/.config/searxng/secret` (substituted into a store-rendered settings
+template), so no secret is written to the Nix store. Configure per host with
+`local.darwin.searxng` — see `hosts/macmini.nix` and `hosts/work.nix`.
 
 ## Usage
 
@@ -115,6 +129,7 @@ nix-config/
 │       ├── atuin-server.nix      # Personal/MacMini: Atuin sync server (launchd daemon)
 │       ├── atuin-ai-server.nix   # Personal/MacMini + work/PLN: Atuin AI bridge (gated on data.atuin.ai.server.models)
 │       ├── tailscale-serve.nix   # Personal/MacMini: Tailscale Serve TLS -> loopback services
+│       ├── searxng.nix           # Personal/MacMini + work/PLN: loopback SearXNG (JSON API / web UI)
 │       ├── homebrew-personal.nix # homebrew.enable = false + personal casks
 │       ├── homebrew-work.nix     # homebrew.enable = true  + work casks
 │       ├── unfree-personal.nix   # unstable overlay + allowUnfreePredicate

@@ -10,6 +10,12 @@ in {
       system.configurationRevision = self.rev or null;
 
       local.darwin.atuinAiServer.enable = true;
+      local.darwin.searxng = {
+        enable = true;
+        port = 9443;
+        formats = [ "json" ];
+        caBundle = "/etc/ssl/certs/ca-bundle-with-zscaler.crt";
+      };
 
       services.aerospace.settings.on-window-detected = [
         { "if".app-id = "com.tinyspeck.slackmacap";    run = "move-node-to-workspace Communications"; }

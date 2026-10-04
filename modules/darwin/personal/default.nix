@@ -8,6 +8,7 @@
     ../atuin-server.nix
     ../atuin-ai-server.nix
     ../tailscale-serve.nix
+    ../searxng.nix
     ../devenv.nix
     ../determinate.nix
     ../homebrew-personal.nix

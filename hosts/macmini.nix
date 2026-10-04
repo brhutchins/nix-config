@@ -11,6 +11,11 @@ in {
       local.darwin.atuinServer.enable = true;
       local.darwin.atuinAiServer.enable = true;
       local.darwin.tailscaleServe.enable = true;
+      local.darwin.searxng = {
+        enable = true;
+        formats = [ "html" "json" ];
+        baseUrl = "https://macmini.tail09722.ts.net:9443/";
+      };
 
       system.stateVersion = 6;
       system.configurationRevision = self.rev or null;

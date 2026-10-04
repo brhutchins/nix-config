@@ -24,7 +24,10 @@
         enable = true;
         sync = false;
       };
-      tools.pi.enable = true;
+      tools.pi = {
+        enable = true;
+        searxngUrl = "http://127.0.0.1:9443";
+      };
     };
   };
 }

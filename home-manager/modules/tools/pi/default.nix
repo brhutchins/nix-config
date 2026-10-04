@@ -4,6 +4,14 @@ let
   cfg = config.local.tools.pi;
   c = config.local.theme."rose-pine-slate".colors;
 
+  # Point ketch (the agentic search CLI behind Pi's MCP tools) at a local
+  # SearXNG instance. Applied to both the MCP server and the shell so the CLI
+  # and the agent agree.
+  ketchEnv = lib.optionalAttrs (cfg.searxngUrl != null) {
+    KETCH_BACKEND = "searxng";
+    KETCH_SEARXNG_URL = cfg.searxngUrl;
+  };
+
   # rose-pine-slate theme, generated from the shared palette so it stays in sync
   # with the rest of the setup. Pi loads user themes from
   # ~/.pi/agent/themes/<name>.json and hot-reloads them on /reload.
@@ -88,6 +96,15 @@ in
 {
   options.local.tools.pi = {
     enable = lib.mkEnableOption "Pi coding agent config (extensions, theme, Plannotator)";
+
+    searxngUrl = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = ''
+        When set, point ketch at a SearXNG instance: sets KETCH_BACKEND=searxng
+        and KETCH_SEARXNG_URL for both the Pi MCP server and the ketch CLI.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -95,6 +112,9 @@ in
     # auth), so it lives in the home profile with the rest of the config rather
     # than as a system package. All hosts track the upstream pi-nix flake.
     home.packages = [ inputs.pi-nix.packages.${pkgs.stdenv.hostPlatform.system}.pi ];
+
+    # ketch CLI env; the MCP entry below gets the same values.
+    home.sessionVariables = ketchEnv;
 
     # Vim-style modal editing for the pi prompt editor. Toggle at runtime with /vim.
     # Source lives in github:brhutchins/pi-vim (pinned in flake.lock).
@@ -154,14 +174,15 @@ in
       lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         mcp="${config.home.homeDirectory}/.pi/agent/mcp.json"
         cmd="${pkgs.unstable.ketch}/bin/ketch"
+        env='${builtins.toJSON ketchEnv}'
         mkdir -p "$(dirname "$mcp")"
         [ -f "$mcp" ] || printf '{"mcpServers":{}}\n' > "$mcp"
-        if ! ${pkgs.jq}/bin/jq -e --arg cmd "$cmd" \
-              '(.mcpServers.ketch.command == $cmd) and (.mcpServers.ketch.args == ["mcp", "serve"])' \
+        if ! ${pkgs.jq}/bin/jq -e --arg cmd "$cmd" --argjson env "$env" \
+              '(.mcpServers.ketch.command == $cmd) and (.mcpServers.ketch.args == ["mcp", "serve"]) and ((.mcpServers.ketch.env // {}) == $env)' \
               "$mcp" >/dev/null 2>&1; then
           tmp="$(mktemp)"
-          ${pkgs.jq}/bin/jq --arg cmd "$cmd" \
-            '.mcpServers = ((.mcpServers // {}) + { ketch: { command: $cmd, args: ["mcp", "serve"] } })' \
+          ${pkgs.jq}/bin/jq --arg cmd "$cmd" --argjson env "$env" \
+            '.mcpServers = ((.mcpServers // {}) + { ketch: ({ command: $cmd, args: ["mcp", "serve"] } + (if ($env | length) > 0 then { env: $env } else {} end)) })' \
             "$mcp" > "$tmp" && mv "$tmp" "$mcp"
         fi
       '';

@@ -17,7 +17,10 @@
       core.gui.enable = true;
       editors.emacs.enable = true;
       tools.atuin.enable = true;
-      tools.pi.enable = true;
+      tools.pi = {
+        enable = true;
+        searxngUrl = "https://macmini.tail09722.ts.net:9443";
+      };
     };
   };
 }
