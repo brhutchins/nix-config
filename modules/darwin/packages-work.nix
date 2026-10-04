@@ -14,6 +14,7 @@ in {
     pkgs.unstable.opencode
     pkgs.mcporter
     pkgs.nh
+    pkgs.ytt
     maki
     herdr
   ];
