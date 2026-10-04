@@ -36,6 +36,22 @@ in {
       };
 
       system.defaults.NSGlobalDomain._HIHideMenuBar = true;
+
+      # Keep the server awake indefinitely. `power.sleep` is applied by
+      # nix-darwin via `systemsetup` (which swallows errors), so the extra
+      # `pmset` activation script covers the settings nix-darwin does not
+      # expose (wake-on-LAN, Power Nap) and acts as a robust fallback.
+      power = {
+        sleep.computer = "never";
+        sleep.harddisk = "never";
+        sleep.allowSleepByPowerButton = false;
+        restartAfterPowerFailure = true;
+        restartAfterFreeze = true;
+      };
+
+      system.activationScripts.pmset.text = ''
+        pmset -a sleep 0 disksleep 0 womp 1 powernap 1 tcpkeepalive 1
+      '';
     };
   };
 }
