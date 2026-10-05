@@ -57,9 +57,15 @@ its own endpoints:
 | `[atuin.ai.server] key`  | server         | Optional `AUTH_TOKEN` the bridge requires from clients.               |
 | `[atuin.ai.server] inferenceKey` | server | Optional token the bridge sends to the inference backend.            |
 
-## Web search (SearXNG + ketch)
+## Web search (SearXNG + DeGoog + ketch)
 
-ketch  can query a self-hosted SearXNG instead of paid backends. One module, two instances:
+ketch can query self-hosted search instances instead of paid backends. SearXNG
+stays the default aggregator; DeGoog is an additive, reversible second backend
+whose selling point is **per-engine transports** (headless browser, real
+Firefox, FlareSolverr) for engines SearXNG's single global `curl_cffi` profile
+cannot get past. Both run natively (no container) as launchd daemons.
+
+SearXNG:
 
 - **PLN:** loopback `127.0.0.1:9443`, JSON API only.
   `local.tools.pi.searxngUrl` points ketch at it.
@@ -73,6 +79,26 @@ ketch  can query a self-hosted SearXNG instead of paid backends. One module, two
 `~/.config/searxng/secret` (substituted into a store-rendered settings
 template), so no secret is written to the Nix store. Configure per host with
 `local.darwin.searxng` — see `hosts/macmini.nix` and `hosts/work.nix`.
+
+DeGoog (`modules/darwin/degoog.nix`, package in `packages/degoog/`):
+
+- **PLN:** loopback `127.0.0.1:9444` (JSON/UI).
+  `local.tools.pi.degoogUrl` points ketch at it. The Zscaler CA is passed via
+  `extraEnvironment` so its outbound engines work.
+- **MacMini:** loopback `127.0.0.1:4444`, exposed over the tailnet by Tailscale
+  Serve as a `/degoog` path mount on 443. Tailscale Serve strips the mount path
+  before proxying, so the Serve target re-adds it
+  (`http://127.0.0.1:4444/degoog`) to match `DEGOOG_BASE_URL`'s path; MacMini and
+  the MacBook point ketch at `https://macmini.tail09722.ts.net/degoog`.
+
+The settings password is generated on first start into
+`~/.config/degoog/settings-password` (0600); all mutable state lives under
+`~/.config/degoog/data` (`DEGOOG_DATA_DIR`). DeGoog ships with **zero engines**,
+so first run needs the web UI wizard to install engines and assign transports —
+that part is not declarative. ketch is configured with `KETCH_BACKEND`
+(`searchBackend`, default `auto`, which prefers the self-hosted instances) plus
+whichever of `KETCH_SEARXNG_URL`/`KETCH_DEGOOG_URL` are set; A/B them with
+`ketch search --multi=searxng,degoog`.
 
 ## Usage
 
@@ -105,6 +131,7 @@ nix-config/
 ├── flake/                 # flake-parts modules
 │   ├── darwin-configurations.nix   # Declares the flake.darwinConfigurations option
 │   ├── inputs.nix                  # Empty imports; home-manager wired via mk-darwin.nix
+│   ├── packages.nix                # Exposes packages/<name> as self.packages.<system>.<name>
 │   └── per-system.nix             # Supported systems list
 ├── hosts/                 # Per-host flake-parts modules (thin)
 │   ├── default.nix        # Aggregator: imports each host file explicitly
@@ -131,6 +158,7 @@ nix-config/
 │       ├── atuin-ai-server.nix   # Personal/MacMini + work/PLN: Atuin AI bridge (gated on data.atuin.ai.server.models)
 │       ├── tailscale-serve.nix   # Personal/MacMini: Tailscale Serve TLS -> loopback services
 │       ├── searxng.nix           # Personal/MacMini + work/PLN: loopback SearXNG (JSON API / web UI)
+│       ├── degoog.nix            # Personal/MacMini + work/PLN: loopback DeGoog (per-engine transports)
 │       ├── homebrew-personal.nix # homebrew.enable = false + personal casks
 │       ├── homebrew-work.nix     # homebrew.enable = true  + work casks
 │       ├── unfree-personal.nix   # unstable overlay + allowUnfreePredicate
@@ -161,6 +189,7 @@ nix-config/
 │       └── window-managers/
 └── packages/              # Custom package definitions (callPackage sources)
     ├── thaw/              # Thaw menu bar manager (consumed by modules/darwin/thaw.nix)
+    ├── degoog/            # DeGoog search aggregator (bun2nix; consumed by modules/darwin/degoog.nix)
     ├── atuin-ai-server/   # Atuin AI bridge (Elixir + Gleam mix release)
     └── stackline/
 ```

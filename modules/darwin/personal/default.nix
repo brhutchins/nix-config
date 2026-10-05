@@ -9,6 +9,7 @@
     ../atuin-ai-server.nix
     ../tailscale-serve.nix
     ../searxng.nix
+    ../degoog.nix
     ../devenv.nix
     ../determinate.nix
     ../homebrew-personal.nix

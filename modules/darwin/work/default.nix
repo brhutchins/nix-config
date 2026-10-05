@@ -10,6 +10,7 @@
     ./yabai.nix
     ../atuin-ai-server.nix
     ../searxng.nix
+    ../degoog.nix
     ../homebrew-work.nix
     ../devenv.nix
 

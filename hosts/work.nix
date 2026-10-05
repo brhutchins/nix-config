@@ -20,6 +20,20 @@ in {
         package = pkgs.unstable.searxng;
       };
 
+      local.darwin.degoog = {
+        enable = true;
+        port = 9444;  # keep off dev ports
+        # DeGoog's outbound engines run behind Zscaler on PLN; without the CA
+        # bundle every HTTPS engine fails. Bun/Node read NODE_EXTRA_CA_CERTS,
+        # curl reads CURL_CA_BUNDLE/SSL_CERT_FILE.
+        extraEnvironment = {
+          SSL_CERT_FILE = "/etc/ssl/certs/ca-bundle-with-zscaler.crt";
+          NODE_EXTRA_CA_CERTS = "/etc/ssl/certs/ca-bundle-with-zscaler.crt";
+          CURL_CA_BUNDLE = "/etc/ssl/certs/ca-bundle-with-zscaler.crt";
+        };
+        package = self.packages.${pkgs.stdenv.hostPlatform.system}.degoog;
+      };
+
       services.aerospace.settings.on-window-detected = [
         { "if".app-id = "com.tinyspeck.slackmacap";    run = "move-node-to-workspace Communications"; }
         { "if".app-id = "com.microsoft.teams2";        run = "move-node-to-workspace Meeting"; }

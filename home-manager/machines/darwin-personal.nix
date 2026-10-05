@@ -20,6 +20,7 @@
       tools.pi = {
         enable = true;
         searxngUrl = "https://macmini.tail09722.ts.net/searxng";
+        degoogUrl = "https://macmini.tail09722.ts.net/degoog";
       };
     };
   };

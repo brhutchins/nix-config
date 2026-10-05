@@ -27,6 +27,17 @@
     };
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    bun2nix = {
+      url = "github:nix-community/bun2nix";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+    # Source only: DeGoog's own flake outputs are Linux-only (its checks/apps
+    # are a NixOS VM test), but the Bun app builds and runs natively on
+    # aarch64-darwin via packages/degoog.
+    degoog = {
+      url = "github:degoog-org/degoog/1.0.0";
+      flake = false;
+    };
     herdr-nix = {
       url = "github:ogulcancelik/herdr";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -49,6 +60,7 @@
       imports = [
         ./flake/darwin-configurations.nix
         ./flake/inputs.nix
+        ./flake/packages.nix
         ./flake/per-system.nix
         ./hosts/default.nix
       ];

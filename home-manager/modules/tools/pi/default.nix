@@ -4,13 +4,22 @@ let
   cfg = config.local.tools.pi;
   c = config.local.theme."rose-pine-slate".colors;
 
-  # Point ketch (the agentic search CLI behind Pi's MCP tools) at a local
-  # SearXNG instance. Applied to both the MCP server and the shell so the CLI
-  # and the agent agree.
-  ketchEnv = lib.optionalAttrs (cfg.searxngUrl != null) {
-    KETCH_BACKEND = "searxng";
-    KETCH_SEARXNG_URL = cfg.searxngUrl;
-  };
+  # Point ketch (the agentic search CLI behind Pi's MCP tools) at the local
+  # search instances. Applied to both the MCP server and the shell so the CLI
+  # and the agent agree. KETCH_BACKEND is only exported when a self-hosted
+  # instance is actually configured — `auto` then prefers it, and the export
+  # overrides ketch's on-disk backend (which may say e.g. `tavily`). Hosts with
+  # no search URLs keep whatever backend ketch has on disk.
+  ketchEnv =
+    (lib.optionalAttrs (cfg.searxngUrl != null) {
+      KETCH_SEARXNG_URL = cfg.searxngUrl;
+    })
+    // (lib.optionalAttrs (cfg.degoogUrl != null) {
+      KETCH_DEGOOG_URL = cfg.degoogUrl;
+    })
+    // (lib.optionalAttrs (cfg.searxngUrl != null || cfg.degoogUrl != null) {
+      KETCH_BACKEND = cfg.searchBackend;
+    });
 
   # rose-pine-slate theme, generated from the shared palette so it stays in sync
   # with the rest of the setup. Pi loads user themes from
@@ -101,8 +110,25 @@ in
       type = lib.types.nullOr lib.types.str;
       default = null;
       description = ''
-        When set, point ketch at a SearXNG instance: sets KETCH_BACKEND=searxng
-        and KETCH_SEARXNG_URL for both the Pi MCP server and the ketch CLI.
+        When set, point ketch at a SearXNG instance via KETCH_SEARXNG_URL for
+        both the Pi MCP server and the ketch CLI.
+      '';
+    };
+
+    degoogUrl = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = ''
+        When set, point ketch at a DeGoog instance via KETCH_DEGOOG_URL for
+        both the Pi MCP server and the ketch CLI.
+      '';
+    };
+
+    searchBackend = lib.mkOption {
+      type = lib.types.enum [ "auto" "searxng" "degoog" ];
+      default = "auto";
+      description = ''
+        KETCH_BACKEND. `auto` prefers the configured self-hosted instances.
       '';
     };
   };

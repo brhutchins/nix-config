@@ -27,6 +27,7 @@
       tools.pi = {
         enable = true;
         searxngUrl = "http://127.0.0.1:9443";
+        degoogUrl = "http://127.0.0.1:9444";
       };
     };
   };

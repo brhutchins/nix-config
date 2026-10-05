@@ -20,6 +20,16 @@ in {
         package = pkgs.unstable.searxng;
       };
 
+      local.darwin.degoog = {
+        enable = true;
+        port = 4444;
+        # Full URL (not just the path): Serve strips `--set-path` and the proxy
+        # target re-adds it, while the absolute base URL keeps generated links
+        # and redirects correct behind the tailnet proxy.
+        baseUrl = "https://macmini.tail09722.ts.net/degoog";
+        package = self.packages.${pkgs.stdenv.hostPlatform.system}.degoog;
+      };
+
       system.stateVersion = 6;
       system.configurationRevision = self.rev or null;
 
