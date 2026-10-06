@@ -53,6 +53,10 @@
       url = "github:brhutchins/pi-research-mode";
       flake = false;
     };
+    plannotator-tui = {
+      url = "github:plannotator/plannotator-tui/v0.9.4";
+      flake = false;
+    };
   };
 
   outputs = inputs@{ flake-parts, ... }:

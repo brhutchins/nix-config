@@ -91,6 +91,7 @@ in
     ../tools/gh-dash
     ../tools/atuin
     ../tools/pi
+    ../tools/plannotator-tui
     ../linux/gui
   ];
 
@@ -932,6 +933,7 @@ in
     # Tools
     local.tools.tuicr.enable = true;
     local.tools.gh-dash.enable = true;
+    local.tools.plannotator-tui.enable = true;
 
 
     #####

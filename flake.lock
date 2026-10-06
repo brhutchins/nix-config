@@ -651,6 +651,23 @@
         "type": "github"
       }
     },
+    "plannotator-tui": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1790296232,
+        "narHash": "sha256-oJ+AMl2G9m/hxFJLwiN6CQ9urhyhK0w6VEcbnpUgQv0=",
+        "owner": "plannotator",
+        "repo": "plannotator-tui",
+        "rev": "59fa0af536260b54b4a6341ab306c9e6c93d9a55",
+        "type": "github"
+      },
+      "original": {
+        "owner": "plannotator",
+        "ref": "v0.9.4",
+        "repo": "plannotator-tui",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "bun2nix": "bun2nix",
@@ -668,6 +685,7 @@
         "pi-nix": "pi-nix",
         "pi-research-mode": "pi-research-mode",
         "pi-vim": "pi-vim",
+        "plannotator-tui": "plannotator-tui",
         "tiny-harness-nix": "tiny-harness-nix"
       }
     },
