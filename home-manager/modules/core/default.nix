@@ -368,7 +368,9 @@ in
     xdg.configFile."herdr/config.toml".text = ''
       # Show first-run notification setup on startup.
       # Missing also shows onboarding; set false after you've chosen.
-      # onboarding = true
+      # config.toml is a read-only home-manager store symlink, so Herdr cannot
+      # persist this itself; pin it off instead of leaving it unset.
+      onboarding = false
 
       [theme]
       # Built-in themes: catppuccin, terminal, tokyo-night, dracula, nord,
