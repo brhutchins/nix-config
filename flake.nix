@@ -57,6 +57,10 @@
       url = "github:plannotator/plannotator-tui/v0.9.4";
       flake = false;
     };
+    herdr-annotate = {
+      url = "github:plannotator/herdr-annotate/cbba4732229191347ff5128e3da71f64474a6a49";
+      flake = false;
+    };
   };
 
   outputs = inputs@{ flake-parts, ... }:

@@ -9,11 +9,20 @@
     { system, ... }:
     let
       pkgs = import inputs.nixpkgs { inherit system; };
+      # herdr-annotate needs rustc >= 1.96; stable 26.05 ships 1.95.
+      unstable = import inputs.nixpkgs-unstable { inherit system; };
+      plannotator-tui = pkgs.callPackage ../packages/plannotator-tui {
+        src = inputs.plannotator-tui;
+      };
     in
     {
       packages = {
-        plannotator-tui = pkgs.callPackage ../packages/plannotator-tui {
-          src = inputs.plannotator-tui;
+        inherit plannotator-tui;
+
+        plannotator-tui-herdr-plugin = pkgs.callPackage ../packages/plannotator-tui-herdr-plugin {
+          rustPlatform = unstable.rustPlatform;
+          src = inputs.herdr-annotate;
+          inherit plannotator-tui;
         };
       } // lib.optionalAttrs (lib.hasAttr system inputs.bun2nix.packages) {
         degoog = pkgs.callPackage ../packages/degoog {
