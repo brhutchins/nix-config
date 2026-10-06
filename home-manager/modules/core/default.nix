@@ -498,6 +498,63 @@ in
       type = "pane"
       command = "gh-dash"
       description = "open gh-dash"
+${optionalString config.local.tools.plannotator-tui.herdr.enable ''
+      # Plannotator / Herdr Annotate plugin (registered declaratively via
+      # ~/.config/herdr/plugins.json). Terminal annotations and document review.
+      [[keys.command]]
+      key = "prefix+a"
+      type = "plugin_action"
+      command = "annotate.capture"
+      description = "annotate text"
+
+      [[keys.command]]
+      key = "prefix+shift+a"
+      type = "plugin_action"
+      command = "annotate.copy-context"
+      description = "copy annotations as context"
+
+      [[keys.command]]
+      key = "prefix+ctrl+a"
+      type = "plugin_action"
+      command = "annotate.copy-archive"
+      description = "copy annotations as context and archive them"
+
+      [[keys.command]]
+      key = "prefix+ctrl+v"
+      type = "plugin_action"
+      command = "annotate.paste-archive"
+      description = "paste annotations into the agent's prompt and archive them"
+
+      [[keys.command]]
+      key = "prefix+ctrl+s"
+      type = "plugin_action"
+      command = "annotate.send-archive"
+      description = "send annotations to the agent and archive them"
+
+      [[keys.command]]
+      key = "prefix+m"
+      type = "plugin_action"
+      command = "annotate.manage"
+      description = "manage annotations"
+
+      [[keys.command]]
+      key = "prefix+o"
+      type = "plugin_action"
+      command = "annotate.open"
+      description = "review documents in this folder"
+
+      [[keys.command]]
+      key = "prefix+shift+o"
+      type = "plugin_action"
+      command = "annotate.last"
+      description = "review the agent's last reply"
+
+      [[keys.command]]
+      key = "prefix+ctrl+o"
+      type = "plugin_action"
+      command = "annotate.last-newest"
+      description = "review the agent's newest reply"
+''}
 
       # [worktrees]
       # directory = "~/.herdr/worktrees"

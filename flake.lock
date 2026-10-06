@@ -297,6 +297,23 @@
         "url": "https://flakehub.com/f/cachix/git-hooks.nix/0.1.941"
       }
     },
+    "herdr-annotate": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1790708817,
+        "narHash": "sha256-CDh80DN7xWtEAPTNu80T+PGBjUAHt66HSWgNVx87tXU=",
+        "owner": "plannotator",
+        "repo": "herdr-annotate",
+        "rev": "cbba4732229191347ff5128e3da71f64474a6a49",
+        "type": "github"
+      },
+      "original": {
+        "owner": "plannotator",
+        "repo": "herdr-annotate",
+        "rev": "cbba4732229191347ff5128e3da71f64474a6a49",
+        "type": "github"
+      }
+    },
     "herdr-nix": {
       "inputs": {
         "nixpkgs": [
@@ -674,6 +691,7 @@
         "degoog": "degoog",
         "determinate": "determinate",
         "flake-parts": "flake-parts_3",
+        "herdr-annotate": "herdr-annotate",
         "herdr-nix": "herdr-nix",
         "home-manager": "home-manager",
         "maki-nix": "maki-nix",
