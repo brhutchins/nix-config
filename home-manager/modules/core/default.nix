@@ -365,11 +365,15 @@ in
     #####
     # herdr
 
-    xdg.configFile."herdr/config.toml".text = ''
+    # config.toml is seeded as a writable file (home.activation.herdrConfig) so
+    # Herdr's settings UI can persist changes; plugins.json stays a managed,
+    # read-only declaration.
+    home.activation.herdrConfig =
+      let
+        seed = pkgs.writeText "herdr-config.toml" ''
       # Show first-run notification setup on startup.
       # Missing also shows onboarding; set false after you've chosen.
-      # config.toml is a read-only home-manager store symlink, so Herdr cannot
-      # persist this itself; pin it off instead of leaving it unset.
+      # Pin the onboarding flag so first-run setup does not reappear.
       onboarding = false
 
       [theme]
@@ -706,7 +710,19 @@ ${optionalString config.local.tools.plannotator-tui.herdr.enable ''
       # Matches Ghostty's default scrollback-limit behavior.
       # scrollback_limit_bytes = 10000000
 
-    '';
+        '';
+      in
+      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        cfg="${config.home.homeDirectory}/.config/herdr/config.toml"
+        mkdir -p "$(dirname "$cfg")"
+        # Seed on first run, and replace the old read-only store symlink once.
+        # Once it is a real file, leave the user's edits alone.
+        if [ ! -e "$cfg" ] || [ -L "$cfg" ]; then
+          rm -f "$cfg"
+          cp -f ${seed} "$cfg"
+          chmod u+w "$cfg"
+        fi
+      '';
 
     #####
 
