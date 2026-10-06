@@ -365,9 +365,10 @@ in
     #####
     # herdr
 
-    # config.toml is seeded as a writable file (home.activation.herdrConfig) so
-    # Herdr's settings UI can persist changes; plugins.json stays a managed,
-    # read-only declaration.
+    # config.toml is seeded as a writable file, then each later Nix seed is
+    # three-way merged into it (home.activation.herdrConfig). Herdr's own writes
+    # are surgical upserts, so UI edits survive while seed changes still apply.
+    # plugins.json stays a managed, read-only declaration.
     home.activation.herdrConfig =
       let
         seed = pkgs.writeText "herdr-config.toml" ''
@@ -714,13 +715,29 @@ ${optionalString config.local.tools.plannotator-tui.herdr.enable ''
       in
       lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         cfg="${config.home.homeDirectory}/.config/herdr/config.toml"
-        mkdir -p "$(dirname "$cfg")"
-        # Seed on first run, and replace the old read-only store symlink once.
-        # Once it is a real file, leave the user's edits alone.
+        # The seed config.toml was last merged against. A later seed is merged
+        # relative to it, so UI edits are kept and seed changes still apply.
+        base="${config.home.homeDirectory}/.local/state/herdr/config.nix-seed.toml"
+        mkdir -p "$(dirname "$cfg")" "$(dirname "$base")"
+
         if [ ! -e "$cfg" ] || [ -L "$cfg" ]; then
+          # First run, or still the old managed symlink: take the seed as-is.
           rm -f "$cfg"
           cp -f ${seed} "$cfg"
           chmod u+w "$cfg"
+          cp -f ${seed} "$base"
+        elif [ ! -f "$base" ] ; then
+          # No ancestor recorded yet: start tracking the seed, keep your file.
+          cp -f ${seed} "$base"
+        else
+          merged="$(mktemp)"
+          if ${pkgs.git}/bin/git merge-file -p -q "$cfg" "$base" ${seed} > "$merged" 2>/dev/null; then
+            cp -f "$merged" "$cfg"
+          else
+            echo "herdr: config.toml conflicts with the Nix seed; keeping your edits" >&2
+          fi
+          rm -f "$merged"
+          cp -f ${seed} "$base"
         fi
       '';
 
