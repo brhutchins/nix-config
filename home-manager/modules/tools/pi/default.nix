@@ -142,6 +142,16 @@ in
     # ketch CLI env; the MCP entry below gets the same values.
     home.sessionVariables = ketchEnv;
 
+    # Also persist the managed values via ketch itself. Session variables only
+    # reach newly started shells; ketch's config file makes the URL effective
+    # immediately after a switch and for any other invocation of this binary.
+    home.activation.ketchConfig = lib.mkIf (cfg.searxngUrl != null)
+      (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        KETCH="${pkgs.unstable.ketch}/bin/ketch"
+        "$KETCH" config set backend searxng
+        "$KETCH" config set searxng_url ${lib.escapeShellArg cfg.searxngUrl}
+      '');
+
     # Vim-style modal editing for the pi prompt editor. Toggle at runtime with /vim.
     # Source lives in github:brhutchins/pi-vim (pinned in flake.lock).
     # The entry file imports the modules in extensions/vim-editor/, so that
