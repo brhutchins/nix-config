@@ -27,7 +27,8 @@
       tools.pi = {
         enable = true;
         searxngUrl = "http://127.0.0.1:9443";
-        degoogUrl = "http://127.0.0.1:9444";
+        # DeGoog is disabled on PLN; leave degoogUrl unset so ketch's
+        # `auto` backend does not probe a dead instance.
       };
     };
   };

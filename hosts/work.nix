@@ -20,8 +20,10 @@ in {
         package = pkgs.unstable.searxng;
       };
 
+      # DeGoog is disabled on PLN for now (SearXNG above is the search
+      # backend). The rest of the block is kept for an easy re-enable.
       local.darwin.degoog = {
-        enable = true;
+        enable = false;
         port = 9444;  # keep off dev ports
         # DeGoog's outbound engines run behind Zscaler on PLN; without the CA
         # bundle every HTTPS engine fails. Bun/Node read NODE_EXTRA_CA_CERTS,
