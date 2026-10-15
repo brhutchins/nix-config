@@ -25,6 +25,28 @@
       checkFlags = (old.checkFlags or [ ]) ++ [ "-skip" "TestRegistryConfigCompatibilityGolden" ];
     });
 
+    # The 18.22+ e2e suites spawn interactive bash from the fresh test HOME,
+    # but nix-darwin's generated /etc/bashrc sources set-environment, which
+    # reassigns PATH wholesale and drops that HOME's bin dir. Every bash test
+    # then runs `atuin init bash` and dies with "command not found" (the plain
+    # bash-preexec variants, plus `e2e_capture`), so the pty never gets atuin's
+    # keybindings/OSC markers and the tests time out; NixOS/nixpkgs#573527 is
+    # this Darwin-only failure. Setting NOSYSBASHRC in the test env makes
+    # /etc/bashrc return before it clobbers PATH. Done in postPatch with a
+    # file guard so it is a no-op on the pre-18.22 releases that have no e2e
+    # tests (e.g. the 18.21.0 in the current lock).
+    atuin = prev.atuin.overrideAttrs (old: {
+      postPatch = (old.postPatch or "") + ''
+        if [ -f crates/atuin/tests/common/mod.rs ]; then
+          substituteInPlace crates/atuin/tests/common/mod.rs \
+            --replace-warn \
+              '("ATUIN_DAEMON__SOCKET_PATH".into(), self.socket().display().to_string()),' \
+              '("ATUIN_DAEMON__SOCKET_PATH".into(), self.socket().display().to_string()),
+            ("NOSYSBASHRC".into(), "1".into()),'
+        fi
+      '';
+    });
+
     # nixpkgs ships curl-impersonate 2.1.1, which lacks the chrome136/chrome142
     # profiles. `curl_cffi` 0.16.0 (used by pkgs.unstable.searxng) resolves its
     # bare "chrome" alias to chrome136, so nixpkgs' curl-cffi disables its
