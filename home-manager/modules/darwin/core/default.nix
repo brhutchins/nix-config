@@ -97,5 +97,23 @@ in
       force = true;
     };
 
+    #####
+    # Free ctrl+space for Herdr's prefix.
+    #
+    # macOS binds ctrl+space to "Select the previous input source" (symbolic
+    # hotkey 60) and consumes the key before the terminal sees it, so Herdr
+    # never enters prefix mode. Disable just that shortcut.
+    #
+    # `-dict-add` (not a plain write of AppleSymbolicHotKeys) is essential: a
+    # plain write replaces the whole dictionary and would wipe every other
+    # symbolic hotkey. The XML `<false/>` is also essential: the inline
+    # NeXTSTEP form `{ enabled = 0; }` stores the string "0", which macOS
+    # ignores, instead of a real boolean.
+    home.activation.disableMacosInputSourceShortcut =
+      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        /usr/bin/defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys \
+          -dict-add 60 '<dict><key>enabled</key><false/></dict>' || true
+      '';
+
   };
 }
