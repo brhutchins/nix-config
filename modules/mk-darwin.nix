@@ -24,7 +24,10 @@ in
         inputs.home-manager.darwinModules.home-manager
         {
           home-manager.extraSpecialArgs = { inherit inputs system username; };
-          home-manager.sharedModules = [ inputs.nixvim.homeModules.nixvim ];
+          home-manager.sharedModules = [
+            inputs.nixvim.homeModules.nixvim
+            inputs.nix-index-database.homeModules.default
+          ];
         }
         home
         hostConfig

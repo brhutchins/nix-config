@@ -166,6 +166,15 @@ in
       force = true;
     };
 
+    # Nix-first dependency policy: a `nix` tool (ephemeral packages, package
+    # discovery) plus a guard that blocks non-nix installs in the model's bash
+    # tool. Source lives in github:brhutchins/pi-nixify (pinned in
+    # flake.lock); Pi loads the directory because it contains index.ts.
+    home.file.".pi/agent/extensions/nixify" = {
+      source = "${inputs.pi-nixify}/extensions/nixify";
+      force = true;
+    };
+
     # rose-pine-slate theme for pi, generated from the shared palette (piTheme
     # is defined in the let block above).
     home.file.".pi/agent/themes/rose-pine-slate.json".text =

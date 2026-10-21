@@ -42,6 +42,13 @@
       url = "github:ogulcancelik/herdr";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+    # Prebuilt nix-index database (and the `nix-locate` wrapper that uses it),
+    # so `nix-locate` works without building an index locally. Consumed by
+    # pi-nixify's `nix` tool (`provides` action).
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     pi-nix = {
       url = "github:earendil-works/pi/stable";
     };
@@ -51,6 +58,10 @@
     };
     pi-research-mode = {
       url = "github:brhutchins/pi-research-mode";
+      flake = false;
+    };
+    pi-nixify = {
+      url = "github:brhutchins/pi-nixify";
       flake = false;
     };
     plannotator-tui = {
