@@ -7,7 +7,9 @@ in {
     pkgs.xh
     pkgs.hey
     pkgs.nodejs
-    pkgs.azure-cli
+    (pkgs.azure-cli.withExtensions [
+      pkgs.azure-cli.extensions.azure-devops
+    ])
     pkgs.code-cursor
     pkgs.unstable.cursor-cli
     pkgs.llama-cpp
